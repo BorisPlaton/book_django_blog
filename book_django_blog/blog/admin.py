@@ -1,33 +1,39 @@
 from django.contrib import admin
 
-from blog.models import Post
+from blog.models import Post, Comment
 
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
-        'title',
-        'slug',
-        'author',
-        'publish',
-        'status',
+        'title', 'slug', 'author', 'publish', 'status',
     )
     list_filter = (
-        'status',
-        'created',
-        'publish',
-        'author',
+        'status', 'created', 'publish', 'author',
     )
     search_fields = (
-        'title',
-        'body',
+        'title', 'body',
     )
     prepopulated_fields = {
         'slug': ('title',),
     }
-    raw_id_fields = ('author',)
+    raw_id_fields = (
+        'author',
+    )
     date_hierarchy = 'publish'
     ordering = (
-        'status',
-        'publish',
+        'status', 'publish',
+    )
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'name', 'active', 'created', 'updated',
+    )
+    list_filter = (
+        'name', 'active', 'created', 'updated',
+    )
+    search_fields = (
+        'name', 'body', 'email',
     )
