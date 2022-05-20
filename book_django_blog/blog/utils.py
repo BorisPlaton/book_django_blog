@@ -1,15 +1,16 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.conf import settings
+from django.core.mail import send_mail
 
 
-def get_paginator(query_set, page_num, objects_per_page=10):
-    paginator_obj = Paginator(query_set, objects_per_page)
-    try:
-        paginator = paginator_obj.page(page_num)
-    except PageNotAnInteger:
-        # Если страница не является целым числом, возвращаем первую страницу.
-        paginator = paginator_obj.page(1)
-    except EmptyPage:
-        # Если номер страницы больше, чем общее количество страниц, возвращаем последнюю.
-        paginator = paginator_obj.page(paginator_obj.num_pages)
+def share_post_via_email(data: dict):
+    subject = f"{data['name']} ({data['email']}) recommends you reading \"{data['post_title']}\""
+    message = f"Read \"{data['post_title']}\" at {data['post_url']}\n\n" \
+              f"{data['name']}\'s comments: {data['comments']}"
+    status = send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [data['to']],
+    )
 
-    return paginator
+    return bool(status)

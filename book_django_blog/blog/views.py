@@ -1,7 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic import ListView
 
+from .forms import EmailPostForm
 from .models import Post
+from .utils import share_post_via_email
 
 
 class PostListView(ListView):
@@ -21,3 +25,33 @@ def post_detail(request, year, month, day, post_slug):
         publish__day=day,
     )
     return render(request, 'blog/post/detail.html', {'post': post})
+
+
+def post_share(request, post_id):
+    post = get_object_or_404(
+        Post,
+        pk=post_id,
+        status='published'
+    )
+    form = EmailPostForm(request.POST or None)
+
+    if form.is_valid():
+        data = form.cleaned_data
+        data.update(
+            {
+                'post_url': request.build_absolute_uri(post.get_absolute_url()),
+                'post_title': post.title,
+            }
+        )
+        if share_post_via_email(data):
+            messages.success(request, "Message was successfully sent")
+            return redirect(post.get_absolute_url())
+
+    return render(
+        request,
+        'blog/post/share.html',
+        {
+            'post': post,
+            'form': form,
+        }
+    )

@@ -25,16 +25,20 @@
     <div class="mt-3">
         <div class="container">
             <div class="row">
-                <!--navbar-->
+
+                <!--Navbar-->
                 <div class="col-auto">
 
                 </div>
 
-                <div>
+                <!--Main content-->
+                <div class="col">
+                    {% include 'blog/includes/alerts.html' %}
                     {% block content %}
 
                     {% endblock %}
                 </div>
+
             </div>
         </div>
     </div>
