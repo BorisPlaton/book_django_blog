@@ -13,7 +13,7 @@ class TagMixin(ContextMixin, View):
     tag = None
 
     def get_posts_with_tag(self):
-        posts = Post.objects.all()
+        posts = Post.objects.get_published()
         tag_slug = self.kwargs.get('tag_slug')
         if tag_slug:
             self.tag = get_object_or_404(Tag, slug=tag_slug)

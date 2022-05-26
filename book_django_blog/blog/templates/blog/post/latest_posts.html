@@ -1,0 +1,9 @@
+<div class="d-flex flex-column">
+    {% for post in latest_posts %}
+    <div class="pt-1">
+        <a href="{{ post.get_absolute_url }}" class="link-primary text-decoration-none">
+            <small>{{ post.title|truncatechars:25 }}</small>
+        </a>
+    </div>
+    {% endfor %}
+</div>
