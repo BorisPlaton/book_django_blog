@@ -19,8 +19,39 @@
                 <small>Published {{ post.publish|date:"j M, Y" }} by {{ post.author }}</small>
             </p>
             {{ post.body|linebreaks }}
+            {% for tag in post.tags.all %}
+            <a href="{% url 'blog:post_list_with_tag' tag.slug %}" class="link-secondary text-decoration-none">
+                <small>#{{ tag }}</small>
+            </a>
+            {% endfor %}
         </div>
     </div>
+
+    {% if similar_posts %}
+    <div class="col">
+        <div class="p-4 bg-white rounded shadow-sm">
+
+            <div class="d-flex justify-content-between align-items-center border-bottom">
+                <h5>Similar posts</h5>
+            </div>
+
+            <div class="mt-2">
+                <div class="row g-2">
+                    {% for post in similar_posts %}
+                    <div class="col-auto">
+                        <a href="" class="link-primary text-decoration-none">
+                            <div class="rounded border px-2 py-1 shadow-sm">
+                                <small>{{ post.title }}</small>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
 
     <!--Add comment form-->
     <div class="col">

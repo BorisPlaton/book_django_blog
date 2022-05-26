@@ -1,17 +1,20 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
+from taggit.models import Tag
 
 from .forms import EmailPostForm, CommentForm
 from .models import Post
-from .utils import share_post_via_email
+from .utils import share_post_via_email, get_similar_posts, TagMixin
 
 
-class PostListView(ListView):
-    queryset = Post.objects.get_published()
+class PostListView(TagMixin, ListView):
     context_object_name = 'posts'
     paginate_by = 15
     template_name = 'blog/post/list.html'
+
+    def get_queryset(self):
+        return self.get_posts_with_tag()
 
 
 def post_detail(request, year, month, day, post_slug):
@@ -23,6 +26,7 @@ def post_detail(request, year, month, day, post_slug):
         publish__month=month,
         publish__day=day,
     )
+    similar_posts = get_similar_posts(post)
     comments = post.comments.filter(active=True)
     form = CommentForm(request.POST or None)
 
@@ -36,6 +40,7 @@ def post_detail(request, year, month, day, post_slug):
             'post': post,
             'form': form,
             'comments': comments,
+            'similar_posts': similar_posts,
         }
     )
 

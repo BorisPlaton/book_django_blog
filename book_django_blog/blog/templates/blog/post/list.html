@@ -4,6 +4,15 @@
 <div class="col">
 
     <div class="row g-3">
+
+        {% if tag %}
+        <div class="col-12">
+            <div class="py-2">
+                <span class="text-secondary lead">#{{ tag.name }}</span>
+            </div>
+        </div>
+        {% endif %}
+
         {% for post in posts %}
         <div class="col-12">
             <a href="{{ post.get_absolute_url }}" class="link-primary text-decoration-none text-dark">

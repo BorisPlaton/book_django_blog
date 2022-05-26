@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse, NoReverseMatch
 from django.utils.text import slugify
 
-from blog.models import Post
+from blog.models import Post, Comment
 
 User = get_user_model()
 
@@ -18,6 +18,12 @@ class TestRequestStatuses(TestCase):
             slug=slugify('Title'),
             author=cls.user,
             status='published',
+        )
+        cls.comment = Comment.objects.create(
+            post=cls.post_instance,
+            name=cls.user.username,
+            email='email@email.com',
+            body='Some awesome text',
         )
 
     def test_post_list_page_200_status(self):
