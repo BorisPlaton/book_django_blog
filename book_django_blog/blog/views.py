@@ -1,10 +1,11 @@
 from django.contrib import messages
+from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from .models import Post
-from .utils import share_post_via_email, get_similar_posts, TagMixin
+from .utils import share_post_via_email, get_similar_posts, TagMixin, get_search_results
 
 
 class PostListView(TagMixin, ListView):
@@ -14,6 +15,14 @@ class PostListView(TagMixin, ListView):
 
     def get_queryset(self):
         return self.get_posts_with_tag()
+
+
+def post_search(request):
+    form = SearchForm(request.GET if 'query' in request.GET else None)
+    search_results = query = None
+    if form.is_valid():
+        search_results, query = get_search_results(form.cleaned_data['query'])
+    return render(request, 'blog/post/search.html', {'results': search_results})
 
 
 def post_detail(request, year, month, day, post_slug):

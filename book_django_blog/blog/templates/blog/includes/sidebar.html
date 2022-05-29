@@ -2,6 +2,20 @@
 <div class="bg-white rounded shadow-sm">
     <div class="d-flex flex-column p-3">
         <div class="border-bottom">
+            <h5>Subscribe to my RSS Feed</h5>
+        </div>
+        <div class="pt-1">
+            <a href="{% url 'blog:post_feed' %}" class="link-primary text-decoration-none">
+                <small>Subscribe</small>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="bg-white rounded shadow-sm mt-3">
+    <div class="d-flex flex-column p-3">
+        <div class="border-bottom">
             <h5>Latest posts</h5>
         </div>
         {% show_latest_posts 10 %}
@@ -20,6 +34,10 @@
                 <a href="{{ post.get_absolute_url }}" class="link-primary text-decoration-none">
                     <small>{{ post.title|truncatechars:25 }}</small>
                 </a>
+            </div>
+            {% empty %}
+            <div class="pt-1">
+                <small class="text-secondary">There is nothing yet</small>
             </div>
             {% endfor %}
         </div>

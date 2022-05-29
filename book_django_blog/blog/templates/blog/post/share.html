@@ -17,10 +17,10 @@
                     {% csrf_token %}
                     <div class="row row-cols-1">
                         {% for field in form %}
-                            <div class="col mb-1">{{ field.label_tag }}</div>
-                            <div class="col">{% form_control field %}</div>
-                            {% include 'blog/includes/errors.html' with field=field %}
-                            <div class="col mb-2"></div>
+                        <div class="col mb-1">{{ field.label_tag }}</div>
+                        <div class="col">{% form_control field %}</div>
+                        {% include 'blog/includes/errors.html' with field=field %}
+                        <div class="col mb-2"></div>
                         {% endfor %}
                     </div>
                     <button type="submit" class="btn btn-primary mt">Send</button>

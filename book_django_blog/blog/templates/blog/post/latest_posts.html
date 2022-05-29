@@ -5,5 +5,9 @@
             <small>{{ post.title|truncatechars:25 }}</small>
         </a>
     </div>
+    {% empty %}
+    <div class="pt-1">
+        <small class="text-secondary">There is nothing yet</small>
+    </div>
     {% endfor %}
 </div>

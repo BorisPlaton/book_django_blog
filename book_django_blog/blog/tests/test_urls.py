@@ -5,6 +5,7 @@ from django.utils.text import slugify
 
 from blog.models import Post, Comment
 
+
 User = get_user_model()
 
 

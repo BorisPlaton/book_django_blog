@@ -1,12 +1,20 @@
+from typing import NamedTuple
+
 from django.conf import settings
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.mail import send_mail
-from django.db.models import Q, Count
+from django.db.models import Q, Count, QuerySet
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic.base import ContextMixin
 from taggit.models import Tag
 
 from blog.models import Post
+
+
+class SearchResults(NamedTuple):
+    results: QuerySet
+    query: str
 
 
 class TagMixin(ContextMixin, View):
@@ -50,3 +58,15 @@ def get_similar_posts(post: Post):
                      .order_by('-same_tags')
                      )
     return similar_posts
+
+
+def get_search_results(query: str) -> SearchResults:
+    search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+    search_query = SearchQuery(query)
+    search_rank = SearchRank(search_vector, search_query)
+    results = (Post.objects
+               .annotate(search=search_vector, rank=search_rank)
+               .filter(search=search_query)
+               .filter(rank__gte=0.3)
+               .order_by('-rank'))
+    return SearchResults(results, query)

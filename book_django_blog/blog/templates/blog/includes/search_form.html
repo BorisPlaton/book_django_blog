@@ -1,0 +1,8 @@
+{% load blog_tags %}
+
+<form action="{% url 'blog:post_search' %}" method="get">
+    <div class="d-flex">
+        {% form_control form.query placeholder='Find a post' class='me-2' %}
+        <button type="submit" class="btn btn-outline-secondary btn-sm">Search</button>
+    </div>
+</form>
